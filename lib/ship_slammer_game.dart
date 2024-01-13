@@ -7,14 +7,12 @@ import 'package:ship_slammer/background/star_component_prototype.dart';
 
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
-import 'package:flutter/material.dart';
-import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
-import 'package:flame_rive/flame_rive.dart';
+
 import 'package:flutter/services.dart';
 
 
-class ShipSlammerGame extends FlameGame with HasKeyboardHandlerComponents {
+class ShipSlammerGame extends FlameGame with HasKeyboardHandlerComponents, HasCollisionDetection {
   @override
   final Vector2 canvasSize = Vector2(500, 500);
   final Vector2 viewportResolution = Vector2(500, 500);
@@ -49,13 +47,13 @@ class ShipSlammerGame extends FlameGame with HasKeyboardHandlerComponents {
       ..position = Vector2(0, -100)
       ..height = 100
       ..width = 100
-      ..angle = pi
+      ..angle = 0
       ..anchor = Anchor.center);
     world.add(_player = Player()
       ..position = Vector2(0, 100)
       ..height = 100
       ..width = 100
-      ..angle = pi
+      ..angle = 0
 
       ..anchor = Anchor.center);
     add(
@@ -69,6 +67,8 @@ class ShipSlammerGame extends FlameGame with HasKeyboardHandlerComponents {
               _handleKey(LogicalKeyboardKey.arrowDown, false),
           LogicalKeyboardKey.arrowUp: (keys) =>
               _handleKey(LogicalKeyboardKey.arrowUp, false),
+          LogicalKeyboardKey.space: (keys) =>
+              _handleBoost(LogicalKeyboardKey.space, false),
         },
         keyDown: {
           LogicalKeyboardKey.arrowRight: (keys) =>
@@ -79,6 +79,8 @@ class ShipSlammerGame extends FlameGame with HasKeyboardHandlerComponents {
               _handleKey(LogicalKeyboardKey.arrowDown, true),
           LogicalKeyboardKey.arrowUp: (keys) =>
               _handleKey(LogicalKeyboardKey.arrowUp, true),
+          LogicalKeyboardKey.space: (keys) =>
+              _handleBoost(LogicalKeyboardKey.space, true),
         },
       ),
     );
@@ -97,6 +99,10 @@ class ShipSlammerGame extends FlameGame with HasKeyboardHandlerComponents {
 
   bool _handleKey(LogicalKeyboardKey key, bool isDown) {
     _keyWeights[key] = isDown ? 1 : 0;
+    return true;
+  }
+  bool _handleBoost(LogicalKeyboardKey key, bool isDown) {
+    if(isDown) developer.log('boosting');
     return true;
   }
 
