@@ -19,6 +19,7 @@ class ShipSlammerGame extends FlameGame with HasKeyboardHandlerComponents, HasCo
   late BackgroundStars _bgstars;
   late Player _player;
   late Basher _basher;
+  late Health _health;
 
   late final CameraComponent cameraComponent;
 
@@ -56,6 +57,16 @@ class ShipSlammerGame extends FlameGame with HasKeyboardHandlerComponents, HasCo
       ..angle = 0
 
       ..anchor = Anchor.center);
+    world.add(_health = Health()
+      ..position = Vector2(-110, -230)
+      ..height = 80
+      ..width = 390
+      ..anchor = Anchor.center);
+
+
+
+
+
     add(
       KeyboardListenerComponent(
         keyUp: {
@@ -103,6 +114,7 @@ class ShipSlammerGame extends FlameGame with HasKeyboardHandlerComponents, HasCo
   }
   bool _handleBoost(LogicalKeyboardKey key, bool isDown) {
     if(isDown) developer.log('boosting');
+    _health.adjustHealth(-10);
     return true;
   }
 
