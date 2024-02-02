@@ -4,7 +4,7 @@ import 'dart:developer' as developer;
 import 'package:ship_slammer/components/player_component.dart';
 import 'package:ship_slammer/components/enemy_component.dart';
 //import 'package:ship_slammer/background/star_component_prototype.dart';
-import 'package:ship_slammer/background/star_background_creator.dart';
+import 'package:ship_slammer/background/star_background_creator_rive.dart';
 
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
