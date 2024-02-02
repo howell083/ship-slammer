@@ -5,7 +5,7 @@ import 'package:flame/game.dart';
 import 'package:ship_slammer/ship_slammer_game.dart';
 
 void main() {
-  runApp(GameWidget(game: ShipSlammerGame()),);
+  runApp(GameWidget(game: ShipSlammerGame(Vector2(500, 500))),);
 }
 /*
 class Stars extends RiveComponent {

@@ -3,28 +3,35 @@ import 'dart:developer' as developer;
 
 import 'package:ship_slammer/components/player_component.dart';
 import 'package:ship_slammer/components/enemy_component.dart';
-import 'package:ship_slammer/background/star_component_prototype.dart';
+//import 'package:ship_slammer/background/star_component_prototype.dart';
+import 'package:ship_slammer/background/star_background_creator.dart';
 
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
+import 'package:flame/collisions.dart';
 
 import 'package:flutter/services.dart';
 
 
-class ShipSlammerGame extends FlameGame with HasKeyboardHandlerComponents, HasCollisionDetection {
+class ShipSlammerGame extends FlameGame with HasKeyboardHandlerComponents, HasCollisionDetection, CollisionCallbacks {
+  ShipSlammerGame(Vector2 canvasSize);
   @override
-  final Vector2 canvasSize = Vector2(500, 500);
+  //final Vector2 canvasSize = Vector2(500, 500);
   final Vector2 viewportResolution = Vector2(500, 500);
-  late BackgroundStars _bgstars;
+  //late BackgroundStars _bgstars;
   late Player _player;
   late Basher _basher;
   late Health _health;
+  late Health _bossHealth;
+  bool _reverseDirection = false;
+  late Timer reboundInterval = Timer(1, onTick: () => {developer.log('timer up'), _reverseDirection = false}, repeat: false, autoStart: false);
 
   late final CameraComponent cameraComponent;
 
   static const int _speed = 200;
   final Vector2 _direction = Vector2.zero();
+  late Vector2 _rebound;
   final Map<LogicalKeyboardKey, double> _keyWeights = {
     LogicalKeyboardKey.arrowUp: 0,
     LogicalKeyboardKey.arrowDown: 0,
@@ -39,21 +46,22 @@ class ShipSlammerGame extends FlameGame with HasKeyboardHandlerComponents, HasCo
     final world = World();
     cameraComponent = CameraComponent.withFixedResolution(width: canvasSize.x, height: canvasSize.y, world: world);
     addAll([world, cameraComponent]);
-    world.add(_bgstars = BackgroundStars()
-      ..position = Vector2(0, 0)
-      ..width = 500
-      ..height = 1500
-      ..anchor = Anchor.center);
+   // world.add(_bgstars = BackgroundStars()
+  //    ..position = Vector2(0, 0)
+  //    ..width = 500
+  //    ..height = 1500
+  //    ..anchor = Anchor.center);
+    world.add(StarBackgroundCreator());
     world.add(_basher = Basher()
       ..position = Vector2(0, -100)
-      ..height = 100
-      ..width = 100
+      ..height = 200
+      ..width = 200
       ..angle = 0
       ..anchor = Anchor.center);
     world.add(_player = Player()
       ..position = Vector2(0, 100)
-      ..height = 100
-      ..width = 100
+      ..height = 150
+      ..width = 150
       ..angle = 0
 
       ..anchor = Anchor.center);
@@ -61,6 +69,11 @@ class ShipSlammerGame extends FlameGame with HasKeyboardHandlerComponents, HasCo
       ..position = Vector2(-110, -230)
       ..height = 80
       ..width = 390
+      ..anchor = Anchor.center);
+    world.add(_bossHealth = Health()
+      ..position = Vector2(0, 220)
+      ..height = 200
+      ..width = 780
       ..anchor = Anchor.center);
 
 
@@ -100,12 +113,21 @@ class ShipSlammerGame extends FlameGame with HasKeyboardHandlerComponents, HasCo
   @override
   void update(double dt) {
     super.update(dt);
+    reboundInterval.update(dt);
+    if(!_reverseDirection) {
+        _direction
+          ..setValues(xInput, yInput)
+          ..normalize();
+        final displacement = _direction * (_speed * dt);
+        _rebound = displacement;
+       // developer.log('displace: $displacement  ...  rebound: $_rebound');
+       // developer.log('direction: $_direction');
+        _player.position.sub(displacement);
+    } else {
+      //developer.log('rebound is: $_rebound');
+      _player.position.add(_rebound);
+    }
 
-    _direction
-      ..setValues(xInput, yInput)
-      ..normalize();
-    final displacement = _direction * (_speed * dt);
-    _player.position.sub(displacement);
   }
 
   bool _handleKey(LogicalKeyboardKey key, bool isDown) {
@@ -115,6 +137,8 @@ class ShipSlammerGame extends FlameGame with HasKeyboardHandlerComponents, HasCo
   bool _handleBoost(LogicalKeyboardKey key, bool isDown) {
     if(isDown) developer.log('boosting');
     _health.adjustHealth(-10);
+    _reverseDirection = true;
+    reboundInterval.start();
     return true;
   }
 

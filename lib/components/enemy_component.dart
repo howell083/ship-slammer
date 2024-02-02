@@ -55,7 +55,7 @@ class Basher extends PositionComponent with CollisionCallbacks {
   }
   @override
   void onCollision (Set<Vector2> intersectionPoints, PositionComponent other,) {
-    developer.log('hit player');
+    if (other is Player) developer.log('hit player');
     basherArtboard.changeBash('dead', true);
     basherArtboard.changeBash('broke', true);
     interval.start();
