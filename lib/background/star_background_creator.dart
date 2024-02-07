@@ -28,7 +28,7 @@ class StarBackgroundCreator extends Component with HasGameRef {
     _createInitialStars();
   }
   void _createStarAt(double x, double y){
-    final twinkleAnimation = starSheet.createAnimation(row: random.nextInt(4), to: 4, stepTime: 0.1,)..variableStepTimes = [max(20, 100 * random.nextDouble()), 0.1, 0.1, 0.1];
+    final twinkleAnimation = starSheet.createAnimation(row: random.nextInt(4), to: 4, stepTime: 0.1,)..variableStepTimes = [max(10, 25 * random.nextDouble()), 0.1, 0.1, 0.1];
 
     double sizeVariant = (random.nextDouble() * 3) * 7;
     game.add(
@@ -45,13 +45,13 @@ class StarBackgroundCreator extends Component with HasGameRef {
     for(var i = 0; i < rowGapSize; i++){
       _createStarAt(
         starGap * i +(random.nextDouble() * starGap),
-        y + (random.nextDouble() * 20),
+        y + (random.nextDouble() * 20) -50,
       );
     }
   }
   void _createInitialStars() {
     final rows = game.size.y / gapSize;
-    for (var i = 0; i < gapSize; i++){
+    for (var i = 0; i < gapSize+15; i++){
       _createRowOfStars(i * rows);
     }
   }

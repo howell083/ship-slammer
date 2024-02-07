@@ -4,14 +4,14 @@ import 'package:flame/components.dart';
 import 'package:flame_rive/flame_rive.dart';
 import 'package:ship_slammer/background/star_component_rive.dart';
 
-class StarBackgroundCreator extends Component with HasGameRef {
+class StarBackgroundCreatorBlue extends Component with HasGameRef {
 
   final gapSize = 6;
-  late double color = (random.nextDouble() * 4).floorToDouble();
+  late double color = 2;
 
   late var starBoard = Artboard();
   Random random = Random();
-  StarBackgroundCreator();
+  StarBackgroundCreatorBlue();
 
   @override
   Future<void> onLoad() async {
@@ -34,10 +34,10 @@ class StarBackgroundCreator extends Component with HasGameRef {
 
     game.add(
         StarComponent(starBoard)
-        ..controller = StateMachineController.fromArtboard(starBoard, 'starMachine',)
-        ..position = Vector2(x, y)
-        ..size = Vector2.all(25 + sizeVariant)
-        ..colorInput = color
+          ..controller = StateMachineController.fromArtboard(starBoard, 'starMachine',)
+          ..position = Vector2(x, y)
+          ..size = Vector2.all(25 + sizeVariant)
+          ..colorInput = color
     );
   }
   void _createRowOfStars(double y){
@@ -47,7 +47,7 @@ class StarBackgroundCreator extends Component with HasGameRef {
     for(var i = 0; i < rowGapSize; i++){
       _createStarAt(
         starGap * i +(random.nextDouble() * starGap),
-        y - (random.nextDouble() * 100),
+        y - (random.nextDouble() * 110),
       );
     }
   }

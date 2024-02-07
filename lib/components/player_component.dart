@@ -54,7 +54,7 @@ class Player extends PositionComponent with CollisionCallbacks{
     slamArtboard =
     await loadArtboard(RiveFile.asset('assets/dropship.riv'));
     add(SlamShip(slamArtboard)..size = size);
-    add(RectangleHitbox(position: Vector2(40, 30), size: Vector2(20, 40)));
+    add(RectangleHitbox(position: Vector2(65, 50), size: Vector2(20, 50)));
   }
 
 }

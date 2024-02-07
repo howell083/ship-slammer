@@ -4,7 +4,10 @@ import 'dart:developer' as developer;
 import 'package:ship_slammer/components/player_component.dart';
 import 'package:ship_slammer/components/enemy_component.dart';
 //import 'package:ship_slammer/background/star_component_prototype.dart';
-import 'package:ship_slammer/background/star_background_creator_rive.dart';
+import 'package:ship_slammer/background/star_background_creator_white.dart';
+import 'package:ship_slammer/background/star_background_creator_yellow.dart';
+import 'package:ship_slammer/background/star_background_creator_blue.dart';
+import 'package:ship_slammer/background/star_background_creator_red.dart';
 
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
@@ -22,6 +25,7 @@ class ShipSlammerGame extends FlameGame with HasKeyboardHandlerComponents, HasCo
   //late BackgroundStars _bgstars;
   late Player _player;
   late Basher _basher;
+  late Basher _basher2;
   late Health _health;
   late Health _bossHealth;
   bool _reverseDirection = false;
@@ -51,9 +55,18 @@ class ShipSlammerGame extends FlameGame with HasKeyboardHandlerComponents, HasCo
   //    ..width = 500
   //    ..height = 1500
   //    ..anchor = Anchor.center);
-    world.add(StarBackgroundCreator());
+    world.add(StarBackgroundCreatorBlue());
+    world.add(StarBackgroundCreatorRed());
+    world.add(StarBackgroundCreatorWhite());
+    world.add(StarBackgroundCreatorYellow());
     world.add(_basher = Basher()
-      ..position = Vector2(0, -100)
+      ..position = Vector2(-250, -100)
+      ..height = 200
+      ..width = 200
+      ..angle = 0
+      ..anchor = Anchor.center);
+    world.add(_basher = Basher()
+      ..position = Vector2(250, -100)
       ..height = 200
       ..width = 200
       ..angle = 0
@@ -62,16 +75,16 @@ class ShipSlammerGame extends FlameGame with HasKeyboardHandlerComponents, HasCo
       ..position = Vector2(0, 100)
       ..height = 150
       ..width = 150
-      ..angle = 0
+      ..angle = pi * 0
 
       ..anchor = Anchor.center);
     world.add(_health = Health()
-      ..position = Vector2(-110, -230)
+      ..position = Vector2(-310, -415)
       ..height = 80
       ..width = 390
       ..anchor = Anchor.center);
     world.add(_bossHealth = Health()
-      ..position = Vector2(0, 220)
+      ..position = Vector2(0, 350)
       ..height = 200
       ..width = 780
       ..anchor = Anchor.center);
@@ -115,13 +128,16 @@ class ShipSlammerGame extends FlameGame with HasKeyboardHandlerComponents, HasCo
     super.update(dt);
     reboundInterval.update(dt);
     if(!_reverseDirection) {
+       // var tempInputs = Vector2(xInput, yInput);
+       // var normInputs = tempInputs.normalize();
+       // developer.log('Inputs: $tempInputs  --  Norms: $normInputs');
         _direction
           ..setValues(xInput, yInput)
           ..normalize();
         final displacement = _direction * (_speed * dt);
         _rebound = displacement;
-       // developer.log('displace: $displacement  ...  rebound: $_rebound');
-       // developer.log('direction: $_direction');
+        //developer.log('displace: $displacement');
+        //developer.log('direction: $_direction');
         _player.position.sub(displacement);
     } else {
       //developer.log('rebound is: $_rebound');
